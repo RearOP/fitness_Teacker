@@ -1,0 +1,37 @@
+import { useState } from "react";
+import Header from "./main/components/Header";
+import Footer from "./main/components/Footer";
+import IndexPage from "./main/IndexPage";
+import Loader from "./main/components/Loader";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Aboutus from "./main/Aboutus";
+import Services from "./main/Services";
+import Contactus from "./main/Contactus";
+import Error from "./main/Error";
+import SignIn from "./main/SignIn";
+import Signup from "./main/Signup";
+
+function App() {
+  return (
+    <>
+      {/* <Loader /> */}
+      <Header />
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<Error />} />
+          <Route path="/" element={<IndexPage />} />
+          <Route path="/index" element={<IndexPage />} />
+          <Route path="/about" element={<Aboutus />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contactus />} />
+          <Route path="/login" element={<SignIn />} />
+          <Route path="/signup" element={<Signup />} />
+
+        </Routes>
+      </BrowserRouter>
+      <Footer />
+    </>
+  );
+}
+
+export default App;
