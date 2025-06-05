@@ -7,9 +7,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Aboutus from "./main/Aboutus";
 import Services from "./main/Services";
 import Contactus from "./main/Contactus";
+import Profile from "./main/Profile";
 import Error from "./main/Error";
 import SignIn from "./main/SignIn";
 import Signup from "./main/Signup";
+import Workoutlist from "./main/Workoutlist";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/about" element={<Aboutus />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contactus />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/workoutlist" element={<Workoutlist />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<Signup />} />
 
