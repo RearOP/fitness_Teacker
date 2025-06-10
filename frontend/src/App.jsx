@@ -12,6 +12,9 @@ import Error from "./main/Error";
 import SignIn from "./main/SignIn";
 import Signup from "./main/Signup";
 import Workoutlist from "./main/Workoutlist";
+import WorkoutDetails from "./main/WorkoutDetails";
+import AddWorkout from "./main/AddWorkout";
+import EditWorkout from "./main/EditWorkout";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
           <Route path="/contact" element={<Contactus />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/workoutlist" element={<Workoutlist />} />
+          <Route path="/workout-details" element={<WorkoutDetails />} />
+          <Route path="/add-workout" element={<AddWorkout />} />
+          <Route path="/edit-workout" element={<EditWorkout />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<Signup />} />
 

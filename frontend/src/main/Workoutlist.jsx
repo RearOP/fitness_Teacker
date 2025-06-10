@@ -225,7 +225,7 @@ export default function Workoutlist() {
                         <a href="#">{item.workoutType}</a>
                       </h1>
                       <p className="text">{item.notes}</p>
-                      <a href="#" className="button">
+                      <a href="/workout-details" className="button">
                         Read more
                       </a>
                     </div>

@@ -1,39 +1,80 @@
 import React from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+const apiurl = "http://localhost:3000/auth";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const initialValues = {
-    fname: "",
-    lname: "",
+    fullname: "",
+    password: "",
     email: "",
     phone: "",
-    message: "",
   };
 
   const validationSchema = Yup.object({
-    fname: Yup.string().required("First name is required"),
-    lname: Yup.string().required("Last name is required"),
+    fullname: Yup.string().required("Full name is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+        "Password must be at least 8 characters long and contain at least one letter and one number"
+      ),
     email: Yup.string().email("Invalid email").required("Email is required"),
     phone: Yup.string()
-      .matches(/^\d{10}$/, "Phone number must be 10 digits")
+      .matches(
+        /^\+?[1-9]\d{1,14}$/,
+        "Please enter a valid international phone number"
+      )
       .required("Phone is required"),
-    message: Yup.string().min(10, "Message must be at least 10 characters"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Form submitted:", values);
-    // handle API call here
+  const handleSubmit = async (values) => {
+    // console.log("Form submitted:", values);
+    try {
+      const res = await axios.post(`${apiurl}/register`, values, {
+        withCredentials: true, //this is critical for setting cookies!
+      });
+      if (res.status === 200) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("something is wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
   };
 
   return (
     <>
-      
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
       <div className="page-contact-us">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-12">
+          <div className="row align-items-center justify-content-center">
+            <div className="col-lg-6">
               <div className="contact-us-content">
                 <div className="section-title">
                   <div className="section-bg-title wow fadeInUp">
@@ -51,42 +92,27 @@ const Signup = () => {
                   <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={(values) => handleSubmit(values)}
                   >
                     {() => (
-                      <Form className="wow fadeInUp" data-wow-delay="0.4s">
+                      <Form className="wow fadeInUp" data-wow-delay="0.4s" method="POST">
                         <div className="row">
-                          <div className="form-group col-md-6 mb-4">
+                          <div className="form-group col-md-12 mb-4">
                             <Field
                               type="text"
-                              name="fname"
+                              name="fullname"
                               className="form-control"
-                              placeholder="First name"
+                              placeholder="Full name"
                             />
                             <ErrorMessage
-                              name="fname"
+                              name="fullname"
                               component="div"
                               className="text-danger"
                               style={{ fontSize: "15px", fontWeight: "bold" }}
                             />
                           </div>
 
-                          <div className="form-group col-md-6 mb-4">
-                            <Field
-                              type="text"
-                              name="lname"
-                              className="form-control"
-                              placeholder="Last name"
-                            />
-                            <ErrorMessage
-                              name="lname"
-                              component="div"
-                              className="text-danger"
-                              style={{ fontSize: "15px", fontWeight: "bold" }}
-                            />
-                          </div>
-
-                          <div className="form-group col-md-6 mb-4">
+                          <div className="form-group col-md-12 mb-4">
                             <Field
                               type="email"
                               name="email"
@@ -101,7 +127,7 @@ const Signup = () => {
                             />
                           </div>
 
-                          <div className="form-group col-md-6 mb-4">
+                          <div className="form-group col-md-12 mb-4">
                             <Field
                               type="text"
                               name="phone"
@@ -115,23 +141,22 @@ const Signup = () => {
                               style={{ fontSize: "15px", fontWeight: "bold" }}
                             />
                           </div>
-
-                          <div className="form-group col-md-12 mb-5">
+                          <div className="form-group col-md-12 mb-4">
                             <Field
-                              as="textarea"
-                              name="message"
+                              autoComplete="current-password"
+                              name="password"
+                              id="password"
+                              type="password"
                               className="form-control"
-                              rows="4"
-                              placeholder="Message"
+                              placeholder="Password"
                             />
                             <ErrorMessage
-                              name="message"
+                              name="password"
                               component="div"
                               className="text-danger"
                               style={{ fontSize: "15px", fontWeight: "bold" }}
                             />
                           </div>
-
                           <div className="col-md-12">
                             <button type="submit" className="btn-default">
                               Submit
