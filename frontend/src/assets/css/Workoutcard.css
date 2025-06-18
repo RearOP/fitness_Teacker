@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
+
+a {
+  text-decoration: none;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.card {
+  padding: 0 1.7rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  background-color: transparent;
+}
+
+.card .wrapper {
+  aspect-ratio: 4 / 5;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card .wrapper:hover .data {
+  transform: translateY(0);
+}
+
+.card .data {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: #fff;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.card .data .content {
+  padding: 1em;
+  position: relative;
+  z-index: 1;
+}
+
+.card .author {
+  font-size: 12px;
+}
+
+.card .title {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.card .text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.card .button {
+  display: block;
+  width: fit-content;
+  margin: 1.5em auto 1em;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0.5em 1em;
+  color: #fff;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.card .title a {
+  color: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+}
+
+.card .header {
+  font-size: small;
+  color: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+}
+
+.card .button::after {
+  content: "\2192";
+  opacity: 0;
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: all 0.3s;
+}
+
+.card .button:hover::after {
+  transform: translate(5px, -50%);
+  opacity: 1;
+}
+
+@media (max-width: 576px) {
+  .card .title {
+    font-size: 1.1rem;
+  }
+  .card .text {
+    font-size: 0.85rem;
+  }
+}
