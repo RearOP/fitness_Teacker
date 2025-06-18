@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/css/Profile.css";
 import Scrollingsticker from "./components/Scrollingsticker";
+import axios from "axios";
 const Profile = () => {
+  const API_URL = "http://localhost:3000";
   // State management
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [showName, setShowName] = useState(false);
-  const [showEmail, setShowEmail] = useState(false);
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
   const [activeTab, setActiveTab] = useState("Recipes");
-  const [coverImage, setCoverImage] = useState(
-    "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=300&fit=crop"
-  );
-  const [profilePic, setProfilePic] = useState(
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-  );
+  const [user, setUser] = useState([]);
+
+  const [name, setName] = useState("");
+  const [showName, setShowName] = useState(false);
+  const [nameError, setNameError] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [showEmail, setShowEmail] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const [coverImage, setCoverImage] = useState();
+  const [profilePic, setProfilePic] = useState();
   const [showModal, setShowModal] = useState({ show: false, image: "" });
 
   const tabs = ["Recipes", "Favorites", "Collections", "Following"];
@@ -56,42 +58,131 @@ const Profile = () => {
     },
   ];
   // Handlers
-  const handleNameSubmit = () => {
-    if (name.trim() === "") {
-      setNameError("Name cannot be empty");
-      return;
+  const handleNameSubmit = async () => {
+    try {
+      if (!nameError) {
+        setShowName(false);
+      }
+
+      const payload = {
+        fullname: name,
+        // email: email,
+      };
+
+      await axios.post(`${API_URL}/profile/updateName`, payload, {
+        withCredentials: true,
+      });
+
+      console.log("data submitted name");
+    } catch (err) {
+      console.error("Error saving Input data to backend:", err.message);
     }
-    setNameError("");
-    setShowName(false);
-    console.log("Name saved:", name);
   };
 
-  const handleEmailSubmit = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address");
-      return;
+  const handleEmailSubmit = async () => {
+    try {
+      if (!emailError) {
+        setShowEmail(false);
+      }
+
+      const payload = {
+        // fullname: name,
+        email: email,
+      };
+
+      await axios.post(`${API_URL}/profile/updateEmail`, payload, {
+        withCredentials: true,
+      });
+
+      console.log("data submitted email");
+    } catch (err) {
+      console.error("Error saving Input data to backend:", err.message);
     }
-    setEmailError("");
-    setShowEmail(false);
-    console.log("Email saved:", email);
   };
 
-  const handleImageUpload = (e, type) => {
+  const handleImageUpload = async (e, type = "profile") => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = async () => {
+        const base64Image = reader.result;
+
+        // Update UI
         if (type === "cover") {
-          setCoverImage(event.target.result);
-        } else if (type === "profile") {
-          setProfilePic(event.target.result);
+          setCoverImage(base64Image);
+          setUser((prevUser) => ({
+            ...prevUser,
+            backgroundImage: base64Image,
+          }));
+        } else {
+          setProfilePic(base64Image);
+          setUser((prevUser) => ({
+            ...prevUser,
+            profileImage: base64Image,
+          }));
+        }
+
+        // Build fresh FormData for each request
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("type", type);
+        // formData.append("fullname", user.fullname || name);
+        // formData.append("email", user.email || email);
+
+        try {
+          await axios.post(`${API_URL}/profile/updateProfile`, formData, {
+            withCredentials: true,
+          });
+          // console.log("Image uploaded and saved successfully");
+        } catch (err) {
+          console.error("Error saving image to backend:", err.message);
         }
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Just for preview
     }
   };
 
+  // Debounced Name Change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (name && name.length > 0 && name.length < 3) {
+        setNameError("Name must be at least 3 characters");
+      } else {
+        setNameError("");
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [name]);
+  // Debounced Email Change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setEmailError("Please enter a valid email");
+      } else {
+        setEmailError("");
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [email]);
+
+  // show dynamic data of logged in user
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/profile/users`, {
+        withCredentials: true,
+      });
+      setUser(res.data);
+      setName(res.data.fullname);
+      setEmail(res.data.email);
+    } catch (err) {
+      console.error("user not logged in", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
   const CameraIcon = () => (
     <svg
       style={{ width: "20px", height: "20px", color: "#6b7280" }}
@@ -166,16 +257,20 @@ const Profile = () => {
           {/* Cover Image */}
           <div className="cover-section">
             <img
-              src={coverImage}
+              src={coverImage || user.backgroundImage}
               alt="Cover"
               className="cover-image"
-              onClick={() => setShowModal({ show: true, image: coverImage })}
+              onClick={() =>
+                setShowModal({
+                  show: true,
+                  image: coverImage || user.backgroundImage,
+                })
+              }
             />
             <label className="camera-btn">
               <CameraIcon />
               <input
                 type="file"
-                accept="image/*"
                 onChange={(e) => handleImageUpload(e, "cover")}
                 className="hidden"
               />
@@ -185,18 +280,20 @@ const Profile = () => {
             <div className="profile-section">
               <div className="profile-pic-container">
                 <img
-                  src={profilePic}
+                  src={profilePic || user.profilePic}
                   alt="Profile"
                   className="profile-pic"
                   onClick={() =>
-                    setShowModal({ show: true, image: profilePic })
+                    setShowModal({
+                      show: true,
+                      image: profilePic || user.profilePic,
+                    })
                   }
                 />
                 <label className="camera-btn">
                   <CameraIcon />
                   <input
                     type="file"
-                    accept="image/*"
                     onChange={(e) => handleImageUpload(e, "profile")}
                     className="hidden"
                   />
@@ -207,22 +304,22 @@ const Profile = () => {
                 {/* Name Field */}
                 <div className="input-section">
                   <div className="input-section">
-                    <input
-                      className={showName ? "name-input-editing" : "name-input"}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      disabled={!showName}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleNameSubmit();
-                        }
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleNameSubmit(); // No need to pass `e` or `values`
                       }}
-                    />
-                    {showName && (
-                      <button onClick={handleNameSubmit} className="save-btn">
-                        Save
-                      </button>
-                    )}
+                    >
+                      <input
+                        className={
+                          showName ? "name-input-editing" : "name-input"
+                        }
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        disabled={!showName}
+                      />
+                      {showName && <button className="save-btn">Save</button>}
+                    </form>
                   </div>
                   {!showName && (
                     <div onClick={() => setShowName(true)}>
@@ -235,24 +332,25 @@ const Profile = () => {
                 {/* Email Field */}
                 <div className="input-section">
                   <div className="input-section">
-                    <input
-                      className={
-                        showEmail ? "email-input-editing" : "email-input"
-                      }
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      disabled={!showEmail}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleEmailSubmit();
-                        }
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleEmailSubmit(); // No need to pass `e` or `values`
                       }}
-                    />
-                    {showEmail && (
-                      <button onClick={handleEmailSubmit} className="save-btn">
-                        Save
-                      </button>
-                    )}
+                    >
+                      <input
+                        type="email"
+                        className={
+                          showEmail ? "email-input-editing" : "email-input"
+                        }
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={!showEmail}
+                        aria-label="Email"
+                        aria-invalid={!!emailError}
+                      />
+                      {showEmail && <button className="save-btn">Save</button>}
+                    </form>
                   </div>
                   {!showEmail && (
                     <div onClick={() => setShowEmail(true)}>

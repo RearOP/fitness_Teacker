@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
   }
   try {
     const decode = jwt.verify(token, process.env.JWT_KEY);
-    const user = await userModle
+    const user = await userModel
       .findOne({ email: decode.email })
       .select("-password");
     if (!user) {

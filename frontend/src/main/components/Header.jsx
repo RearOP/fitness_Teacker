@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { IoMdNotificationsOutline } from "react-icons/io";
 const Header = () => {
   const navigate = useNavigate();
   const [Admin, setAdmin] = useState(false);
@@ -33,7 +33,7 @@ const Header = () => {
         withCredentials: true,
       });
       if (log.status === 200) {
-        navigate("/");
+        navigate("/index");
       }
     } catch (err) {
       console.error("Logout failed:", err.message);
@@ -48,7 +48,6 @@ const Header = () => {
             <a className="navbar-brand" href="/">
               <img src="images/logo.svg" alt="Logo" />
             </a>
-
             <div className="collapse navbar-collapse main-menu">
               <div className="nav-menu-wrapper">
                 <ul className="navbar-nav mr-auto" id="menu">
@@ -100,31 +99,6 @@ const Header = () => {
                             Progress / Analytics
                           </a>
                         </li>
-                        <li>
-                          <a className="nav-link" href="/search">
-                            Search Results
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="/reports">
-                            Reports
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="/notifications">
-                            Notifications
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="/forum">
-                            Feed / Forum
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="/support">
-                            Support
-                          </a>
-                        </li>
                       </ul>
                     </li>
                   ) : (
@@ -169,11 +143,6 @@ const Header = () => {
                             Inbox
                           </a>
                         </li>
-                        <li>
-                          <a className="nav-link" href="/reports">
-                            Reports
-                          </a>
-                        </li>
                       </ul>
                     </li>
                   )}
@@ -184,7 +153,7 @@ const Header = () => {
                   </li>
                 </ul>
               </div>
-              {!IsLoggedIn ? ( 
+              {!IsLoggedIn ? (
                 <>
                   <div className="btn">
                     <a href="/login" className="btn-default btn-highlighted">
@@ -198,14 +167,23 @@ const Header = () => {
                   </div>
                 </>
               ) : (
-                <div className="header-btn">
-                  <button
-                    onClick={() => logout()}
-                    className="btn-default btn-highlighted"
-                  >
-                    Logout
-                  </button>
-                </div>
+                <>
+                  <ul className="navbar-nav mr-auto" id="menu">
+                    <li className="nav-item">
+                      <a className="nav-link" href="/notifications">
+                        <IoMdNotificationsOutline style={{width: "1.5rem",height: "1.5rem"}} />
+                      </a>
+                    </li>
+                  </ul>
+                  <div className="header-btn">
+                    <button
+                      onClick={() => logout()}
+                      className="btn-default btn-highlighted"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </>
               )}
             </div>
 
