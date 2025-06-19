@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdNotificationsOutline } from "react-icons/io";
 const Header = () => {
   const navigate = useNavigate();
@@ -33,7 +33,11 @@ const Header = () => {
         withCredentials: true,
       });
       if (log.status === 200) {
-        navigate("/index");
+        if (window.location.pathname === "/") {
+          window.location.reload();
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       console.error("Logout failed:", err.message);
@@ -45,134 +49,141 @@ const Header = () => {
       <div className="header-sticky">
         <nav className="navbar navbar-expand-lg">
           <div className="container">
-            <a className="navbar-brand" href="/">
+            <Link className="navbar-brand" to="/">
               <img src="images/logo.svg" alt="Logo" />
-            </a>
+            </Link>
             <div className="collapse navbar-collapse main-menu">
               <div className="nav-menu-wrapper">
                 <ul className="navbar-nav mr-auto" id="menu">
                   <li className="nav-item">
-                    <a className="nav-link" href="/">
+                    <Link className="nav-link" to="/">
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/about">
+                    <Link className="nav-link" to="/about">
                       About Us
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/services">
+                    <Link className="nav-link" to="/services">
                       Services
-                    </a>
+                    </Link>
                   </li>
 
                   {/* User Pages */}
                   {!Admin ? (
                     <li className="nav-item submenu">
-                      <a className="nav-link" href="#">
+                      <Link className="nav-link" to="#">
                         More
-                      </a>
+                      </Link>
                       <ul>
                         <li>
-                          <a className="nav-link" href="/profile">
+                          <Link className="nav-link" to="/profile">
                             My Profile
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/dashboard">
+                          <Link className="nav-link" to="/dashboard">
                             User Dashboard
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/workouts">
+                          <Link className="nav-link" to="/workouts">
                             Workouts
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/nutrition">
+                          <Link className="nav-link" to="/add-workout">
+                            Add Workouts
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="nav-link" to="/nutrition">
                             Nutrition Logs
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/progress">
+                          <Link className="nav-link" to="/progress">
                             Progress / Analytics
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </li>
                   ) : (
                     /* Admin Pages */
                     <li className="nav-item submenu">
-                      <a className="nav-link" href="#">
+                      <Link className="nav-link" to="#">
                         Admin
-                      </a>
+                      </Link>
                       <ul>
                         <li>
-                          <a className="nav-link" href="/admin/dashboard">
+                          <Link className="nav-link" to="/admin/dashboard">
                             Admin Dashboard
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/workouts">
+                          <Link className="nav-link" to="/admin/workouts">
                             Manage Workouts
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/logs">
+                          <Link className="nav-link" to="/admin/logs">
                             View Logs
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/analytics">
+                          <Link className="nav-link" to="/admin/analytics">
                             Analytics View
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/users">
+                          <Link className="nav-link" to="/admin/users">
                             User Directory
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/moderation">
+                          <Link className="nav-link" to="/admin/moderation">
                             Moderation Panel
-                          </a>
+                          </Link>
                         </li>
                         <li>
-                          <a className="nav-link" href="/admin/inbox">
+                          <Link className="nav-link" to="/admin/inbox">
                             Inbox
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </li>
                   )}
                   <li className="nav-item">
-                    <a className="nav-link" href="/contact">
+                    <Link className="nav-link" to="/contact">
                       Contact Us
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
               {!IsLoggedIn ? (
                 <>
                   <div className="btn">
-                    <a href="/login" className="btn-default btn-highlighted">
+                    <Link to="/login" className="btn-default btn-highlighted">
                       Sign In
-                    </a>
+                    </Link>
                   </div>
                   <div className="header-btn">
-                    <a href="/signup" className="btn-default">
+                    <Link to="/signup" className="btn-default">
                       Sign Up
-                    </a>
+                    </Link>
                   </div>
                 </>
               ) : (
                 <>
                   <ul className="navbar-nav mr-auto" id="menu">
                     <li className="nav-item">
-                      <a className="nav-link" href="/notifications">
-                        <IoMdNotificationsOutline style={{width: "1.5rem",height: "1.5rem"}} />
-                      </a>
+                      <Link className="nav-link" to="/notifications">
+                        <IoMdNotificationsOutline
+                          style={{ width: "1.5rem", height: "1.5rem" }}
+                        />
+                      </Link>
                     </li>
                   </ul>
                   <div className="header-btn">

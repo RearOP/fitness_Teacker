@@ -28,35 +28,13 @@ const SignIn = () => {
         navigate("/");
       }
     } catch (error) {
-      toast.error("something is wrong", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      console.error("Login failed:", error);
     }
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-      />
+      
       <div className="page-contact-us">
         <div className="container">
           <div className="row align-items-center justify-content-center">
