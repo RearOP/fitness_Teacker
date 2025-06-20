@@ -14,7 +14,7 @@ router.get("/", IsloggedIn, async (req, res) => {
 });
 
 // POST create a nutrition log
-router.post("/add-nutritions", IsloggedIn, async (req, res) => {
+router.post("/add-nutrition", IsloggedIn, async (req, res) => {
   try {
     const newLog = await nutritionModel.create({ ...req.body, user: req.user.id });
     res.status(201).json(newLog);

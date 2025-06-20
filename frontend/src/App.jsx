@@ -49,7 +49,7 @@ function App() {
           }
         />
         <Route
-          path="/workoutlist"
+          path="/workouts"
           element={
             <PrivateRoutes>
               <Workoutlist />

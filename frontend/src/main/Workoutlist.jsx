@@ -1,170 +1,24 @@
-import * as React from "react";
+import { useState, React, useEffect } from "react";
 import Scrollingsticker from "./components/Scrollingsticker";
 import "../assets/css/Workoutcard.css";
-import img3 from '../assets/images/about-img-3.jpg'
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Workoutlist() {
-  const workout = [
-    {
-      day: "04",
-      month: "August",
-      year: "2025",
-      userId: "user_12345",
-      workoutType: "Strength Training",
-      durationMinutes: 45,
-      caloriesBurned: 320,
-      exercises: [
-        {
-          name: "Bench Press",
-          sets: 3,
-          repsPerSet: [10, 8, 6],
-          weightKg: [60, 70, 75],
-        },
-        {
-          name: "Deadlift",
-          sets: 3,
-          repsPerSet: [8, 6, 4],
-          weightKg: [80, 90, 100],
-        },
-        {
-          name: "Pull-ups",
-          sets: 3,
-          repsPerSet: [8, 6, 5],
-          weightKg: [0, 0, 0],
-        },
-      ],
-      notes: "Felt strong today. Increased weight on deadlifts.",
-      imageUrl:img3,
-    },
-    {
-      day: "04",
-      month: "August",
-      year: "2025",
-      userId: "user_12345",
-      workoutType: "Strength Training",
-      durationMinutes: 45,
-      caloriesBurned: 320,
-      exercises: [
-        {
-          name: "Bench Press",
-          sets: 3,
-          repsPerSet: [10, 8, 6],
-          weightKg: [60, 70, 75],
-        },
-        {
-          name: "Deadlift",
-          sets: 3,
-          repsPerSet: [8, 6, 4],
-          weightKg: [80, 90, 100],
-        },
-        {
-          name: "Pull-ups",
-          sets: 3,
-          repsPerSet: [8, 6, 5],
-          weightKg: [0, 0, 0],
-        },
-      ],
-      notes: "Felt strong today. Increased weight on deadlifts.",
-      imageUrl:
-        img3, // Replace with dynamic later
-    },
-    {
-      day: "04",
-      month: "August",
-      year: "2025",
-      userId: "user_12345",
-      workoutType: "Strength Training",
-      durationMinutes: 45,
-      caloriesBurned: 320,
-      exercises: [
-        {
-          name: "Bench Press",
-          sets: 3,
-          repsPerSet: [10, 8, 6],
-          weightKg: [60, 70, 75],
-        },
-        {
-          name: "Deadlift",
-          sets: 3,
-          repsPerSet: [8, 6, 4],
-          weightKg: [80, 90, 100],
-        },
-        {
-          name: "Pull-ups",
-          sets: 3,
-          repsPerSet: [8, 6, 5],
-          weightKg: [0, 0, 0],
-        },
-      ],
-      notes: "Felt strong today. Increased weight on deadlifts.",
-      imageUrl:
-        img3, // Replace with dynamic later
-    },
-    {
-      day: "04",
-      month: "August",
-      year: "2025",
-      userId: "user_12345",
-      workoutType: "Strength Training",
-      durationMinutes: 45,
-      caloriesBurned: 320,
-      exercises: [
-        {
-          name: "Bench Press",
-          sets: 3,
-          repsPerSet: [10, 8, 6],
-          weightKg: [60, 70, 75],
-        },
-        {
-          name: "Deadlift",
-          sets: 3,
-          repsPerSet: [8, 6, 4],
-          weightKg: [80, 90, 100],
-        },
-        {
-          name: "Pull-ups",
-          sets: 3,
-          repsPerSet: [8, 6, 5],
-          weightKg: [0, 0, 0],
-        },
-      ],
-      notes: "Felt strong today. Increased weight on deadlifts.",
-      imageUrl:
-        img3, // Replace with dynamic later
-    },
-    {
-      day: "04",
-      month: "August",
-      year: "2025",
-      userId: "user_12345",
-      workoutType: "Strength Training",
-      durationMinutes: 45,
-      caloriesBurned: 320,
-      exercises: [
-        {
-          name: "Bench Press",
-          sets: 3,
-          repsPerSet: [10, 8, 6],
-          weightKg: [60, 70, 75],
-        },
-        {
-          name: "Deadlift",
-          sets: 3,
-          repsPerSet: [8, 6, 4],
-          weightKg: [80, 90, 100],
-        },
-        {
-          name: "Pull-ups",
-          sets: 3,
-          repsPerSet: [8, 6, 5],
-          weightKg: [0, 0, 0],
-        },
-      ],
-      notes: "Felt strong today. Increased weight on deadlifts.",
-      imageUrl:
-        img3, // Replace with dynamic later
-    },
-  ];
+  const [workouts, setWorkouts] = useState([]);
+  let API_URL = "http://localhost:3000/";
+ 
+  async function getworkout() {
+    const res = await axios.get(`${API_URL}workouts/`, {
+      withCredentials: true,
+    });
+    console.log(res.data);
+    setWorkouts(res.data);
+  }
+
+  useEffect(() => {
+    getworkout();
+  }, []);
 
   return (
     <>
@@ -179,10 +33,10 @@ export default function Workoutlist() {
                 <nav className="wow fadeInUp">
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="/">home</a>
+                      <Link to="/">home</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      workouts
+                      Workouts
                     </li>
                   </ol>
                 </nav>
@@ -194,46 +48,83 @@ export default function Workoutlist() {
 
       <Scrollingsticker />
 
-      <div className="container">
-        <div className="row">
-          {workout.map((item, index) => (
-            <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
-              <div className="card">
-                <div
-                  className="wrapper"
-                  style={{
-                    background: `url(${item.imageUrl}) center / cover no-repeat`,
-                  }}
-                >
+      <div className="container my-5">
+        <div className="row" style={{display: "grid" }}>
+          {workouts.map((item, index) => {
+            const dateObj = new Date(item.date);
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleString("default", { month: "short" });
+            const year = dateObj.getFullYear();
+
+            // Calculate total duration or total sets from exercises
+            const totalDuration = item.exercises.reduce(
+              (sum, ex) => sum + (ex.duration || 0),
+              0
+            );
+            const totalSets = item.exercises.reduce(
+              (sum, ex) => sum + (ex.sets || 0),
+              0
+            );
+
+            return (
+              <div key={index} className="card">
+                <div className="wrapper war">
                   <div className="header">
                     <div className="date">
                       <span className="day" style={{ marginRight: "0.5rem" }}>
-                        {item.day}
+                        {day}
                       </span>
                       <span className="month" style={{ marginRight: "0.5rem" }}>
-                        {item.month}
+                        {month}
                       </span>
-                      <span className="year" style={{ marginRight: "0.5rem" }}>
-                        {item.year}
-                      </span>
+                      <span className="year">{year}</span>
+                    </div>
+                    <div
+                      className="difficulty-badge"
+                      style={{ borderColor: "#4CAF50" }}
+                    >
+                      {item.type}
                     </div>
                   </div>
+
                   <div className="data">
                     <div className="content">
-                      <span className="author">Jane Doe</span>
+                      <span className="author">Your Workout Plan</span>
                       <h1 className="title">
-                        <a href="#">{item.workoutType}</a>
+                        <Link to={`/workoutdetails/${item._id}`}>
+                          {item.title}
+                        </Link>
                       </h1>
-                      <p className="text">{item.notes}</p>
-                      <a href="/workout-details" className="button">
-                        Read more
-                      </a>
+
+                      <div className="workout-stats">
+                        <div className="stat-item">
+                          <span className="stat-label">Total Duration</span>
+                          <span className="stat-value">
+                            {totalDuration} min
+                          </span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Total Sets</span>
+                          <span className="stat-value">{totalSets}</span>
+                        </div>
+                      </div>
+
+                      <p className="text">
+                        {item.exercises[0]?.notes || "No notes available."}
+                      </p>
+
+                      <Link
+                        to={`/workoutdetails/${item._id}`}
+                        className="button"
+                      >
+                        View Workout
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>
